@@ -1,0 +1,50 @@
+<!-- templates/checkout.html -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout - Toko Buku Amanah</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <h1>Checkout</h1>
+
+  <section>
+    <h2>Informasi Pengguna</h2>
+    <p>Nama: {{ user.name }}</p>
+    <p>Alamat: {{ user.address }}</p>
+    <p>No. Telepon: {{ user.phone }}</p>
+  </section>
+
+  <section>
+    <h2>Isi Keranjang</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Judul Buku</th>
+          <th>Harga</th>
+          <th>Jumlah</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart_items %}
+        <tr>
+          <td>{{ item.title }}</td>
+          <td>Rp{{ item.price }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>Rp{{ item.price * item.quantity }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p><strong>Total: Rp{{ total }}</strong></p>
+  </section>
+
+  <form action="{{ url_for('payment') }}" method="POST">
+    <button type="submit">Bayar Sekarang</button>
+  </form>
+
+  <a href="{{ url_for('cart') }}">&#8592; Kembali ke Keranjang</a>
+</body>
+</html>

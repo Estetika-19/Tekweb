@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Pembayaran</h2>
+  <p>Transfer ke rekening berikut:</p>
+  <ul>
+    <li>Bank: {{ bank_info.bank }}</li>
+    <li>No Rekening: {{ bank_info.account_number }}</li>
+    <li>Atas Nama: {{ bank_info.account_name }}</li>
+  </ul>
+
+  <h4>Rincian Pembelian:</h4>
+  <ul>
+    {% for item in cart_items %}
+      <li>{{ item.title }} - Rp{{ item.price }}</li>
+    {% endfor %}
+  </ul>
+  <p><strong>Total:</strong> Rp{{ total }}</p>
+
+  <form method="POST">
+  <button type="submit" class="btn btn-success">Saya Sudah Transfer</button>
+</form>
+
+</div>
+{% endblock %}

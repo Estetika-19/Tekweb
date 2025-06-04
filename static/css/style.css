@@ -1,0 +1,117 @@
+/* Font */
+body {
+  font-family: 'Quicksand', sans-serif;
+  background-color: #fff;
+  color: #333;
+  padding-bottom: 40px;
+}
+
+/* Navbar */
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+  font-weight: 500;
+  color: #ff4d6d !important;
+}
+
+.navbar-nav .nav-link:hover {
+  text-decoration: underline;
+}
+
+/* Section Heading */
+h2 {
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+h2 span {
+  color: #ff4d6d;
+}
+
+/* Book Card Layout */
+.card {
+  border: none;
+  background-color: #f7f7f7;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease-in-out;
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card-img-top {
+  height: 250px;
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.card-body {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #222;
+}
+
+.card-text {
+  font-weight: bold;
+  color: #ff4d6d;
+  margin-bottom: 10px;
+}
+
+.btn-primary {
+  background-color: #ff4d6d;
+  border: none;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #e63950;
+}
+
+/* Responsive Fix */
+@media (max-width: 500px) {
+  .card-img-top {
+    height: 100px;
+  }
+}
+
+h2 {
+  font-weight: 700;
+  color: #343a40;
+}
+
+form {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border: none;
+}
+
+.alert {
+  margin-top: 10px;
+}

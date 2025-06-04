@@ -1,0 +1,18 @@
+<!-- book_detail.html -->
+ {% extends 'base.html' %}
+{% block content %}
+<div class="row">
+  <div class="col-md-5">
+    <img src="{{ book.image_url }}" class="img-fluid">
+  </div>
+  <div class="col-md-7">
+    <h2>{{ book.title }}</h2>
+    <p>{{ book.author }}</p>
+    <p>Rp{{ book.price }}</p>
+    <p>{{ book.synopsis }}</p>
+    <form method="GET" action="{{ url_for('add_to_cart', book_id=book.id) }}">
+      <button type="submit" class="btn btn-success">Add to Cart</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
