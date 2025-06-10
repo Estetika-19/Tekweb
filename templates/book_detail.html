@@ -1,5 +1,4 @@
-<!-- book_detail.html -->
- {% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 <div class="row">
   <div class="col-md-5">
@@ -7,12 +6,38 @@
   </div>
   <div class="col-md-7">
     <h2>{{ book.title }}</h2>
+    <p>Book ID: {{ book.id }}</p>
     <p>{{ book.author }}</p>
     <p>Rp{{ book.price }}</p>
     <p>{{ book.synopsis }}</p>
-    <form method="GET" action="{{ url_for('add_to_cart', book_id=book.id) }}">
-      <button type="submit" class="btn btn-success">Add to Cart</button>
-    </form>
+
+    <button id="addToCartBtn" class="btn btn-success" data-book-id="{{ book.id }}">Add to Cart</button>
+
+<script>
+  document.getElementById('addToCartBtn').addEventListener('click', () => {
+    const button = document.getElementById('addToCartBtn');
+    const bookId = button.dataset.bookId;
+
+    console.log("Sending book_id:", bookId);
+
+    fetch('/api/cart/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ book_id: bookId })
+    })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message || data.error || 'Added to cart!');
+    })
+    .catch(err => {
+      alert('Failed to add to cart');
+      console.error(err);
+    });
+  });
+</script>
+
   </div>
 </div>
 {% endblock %}

@@ -1,50 +1,67 @@
-<!-- templates/checkout.html -->
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <title>Checkout - Toko Buku Amanah</title>
-  <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
-  <h1>Checkout</h1>
+{% extends 'base.html' %}
+{% block content %}
+<h1>Checkout</h1>
 
-  <section>
-    <h2>Informasi Pengguna</h2>
-    <p>Nama: {{ user.name }}</p>
-    <p>Alamat: {{ user.address }}</p>
-    <p>No. Telepon: {{ user.phone }}</p>
-  </section>
+<section id="user-info" class="card">
+  <!-- User info akan tampil di sini -->
+</section>
 
-  <section>
-    <h2>Isi Keranjang</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Judul Buku</th>
-          <th>Harga</th>
-          <th>Jumlah</th>
-          <th>Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in cart_items %}
-        <tr>
-          <td>{{ item.title }}</td>
-          <td>Rp{{ item.price }}</td>
-          <td>{{ item.quantity }}</td>
-          <td>Rp{{ item.price * item.quantity }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <p><strong>Total: Rp{{ total }}</strong></p>
-  </section>
+<section id="cart-content" class="card">
+  <!-- Cart content tampil di sini -->
+</section>
 
-  <form action="{{ url_for('payment') }}" method="POST">
-    <button type="submit">Bayar Sekarang</button>
-  </form>
+<a href="/payment" class="btn btn-success mt-3">Bayar Sekarang</a>
 
-  <a href="{{ url_for('cart') }}">&#8592; Kembali ke Keranjang</a>
-</body>
-</html>
+<p id="total-price"></p>
+
+<script>
+  fetch('/api/checkout')
+    .then(res => res.json())
+    .then(data => {
+      const user = data.user;
+      document.getElementById('user-info').innerHTML = `
+        <h2>Informasi Pengguna</h2>
+        <p><strong>Nama:</strong> ${user.name}</p>
+        <p><strong>Alamat:</strong> ${user.address}</p>
+        <p><strong>No. Telepon:</strong> ${user.phone}</p>
+      `;
+
+      const items = data.cart_items;
+      let table = `
+        <h2>Isi Keranjang</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Judul</th>
+              <th>Harga</th>
+              <th>Jumlah</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      items.forEach(item => {
+        const subtotal = item.price * item.quantity;
+        table += `
+          <tr>
+            <td>${item.title}</td>
+            <td>Rp${item.price.toLocaleString('id-ID')}</td>
+            <td>${item.quantity}</td>
+            <td>Rp${subtotal.toLocaleString('id-ID')}</td>
+          </tr>
+        `;
+      });
+      table += `
+          </tbody>
+        </table>
+      `;
+      document.getElementById('cart-content').innerHTML = table;
+
+      document.getElementById('total-price').textContent = `Total: Rp${data.total.toLocaleString('id-ID')}`;
+    })
+    .catch(err => {
+      console.error('Gagal ambil data checkout:', err);
+      document.getElementById('user-info').textContent = 'Gagal memuat data checkout.';
+    });
+</script>
+{% endblock %}

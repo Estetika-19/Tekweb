@@ -1,16 +1,60 @@
-<!-- order_history.html -->
- {% extends 'base.html' %}
+{% extends 'base.html' %}
+
 {% block content %}
-<h2>Your Orders</h2>
-<div class="row">
-  {% for order in orders %}
-  <div class="card mb-2">
-    <div class="card-body">
-      <h5>{{ order.title }}</h5>
-      <p>Status: {{ order.status }}</p>
-      <p>${{ order.price }}</p>
-    </div>
+<div class="container mt-4">
+  <h2>Riwayat Pesanan Anda</h2>
+  <div id="orders-container">
+    <p>Loading orders...</p>
   </div>
-  {% endfor %}
 </div>
+
+<script>
+  fetch('/api/orders')
+    .then(response => {
+      if (!response.ok) throw new Error('Gagal mengambil data orders');
+      return response.json();
+    })
+    .then(data => {
+      const container = document.getElementById('orders-container');
+      if (!data.orders || data.orders.length === 0) {
+        container.innerHTML = '<p>Belum ada pesanan.</p>';
+        return;
+      }
+
+      let html = '';
+      data.orders.forEach(order => {
+        const totalPrice = Number(order.total_price) || 0;
+        const createdAt = new Date(order.created_at).toLocaleString('id-ID', {
+          year: 'numeric', month: 'long', day: 'numeric',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+
+        html += `
+          <div class="card p-3 mb-3 bg-light">
+            <p><strong>Order ID:</strong> ${order.id}</p>
+            <p><strong>Status:</strong> ${order.status || 'Belum diproses'}</p>
+            <p><strong>Tanggal:</strong> ${createdAt}</p>
+            <p><strong>Total:</strong> Rp${totalPrice.toLocaleString('id-ID')}</p>
+            <p><strong>Item:</strong></p>
+            <ul>
+        `;
+
+        if (order.items && order.items.length > 0) {
+          order.items.forEach(item => {
+            const price = Number(item.price) || 0;
+            html += `<li>${item.title} - Rp${price.toLocaleString('id-ID')} x ${item.quantity}</li>`;
+          });
+        } else {
+          html += '<li>Tidak ada item dalam pesanan ini.</li>';
+        }
+
+        html += '</ul></div>';
+      });
+
+      container.innerHTML = html;
+    })
+    .catch(err => {
+      document.getElementById('orders-container').innerHTML = `<p>Error: ${err.message}</p>`;
+    });
+</script>
 {% endblock %}

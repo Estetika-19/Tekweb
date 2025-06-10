@@ -1,19 +1,96 @@
-<!-- home.html -->
-{% extends 'base.html' %}
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Home - Kura Books{% endblock %}
+
 {% block content %}
-<h2>Books <span>Collections</span></h2>
-<div class="row">
-  {% for book in books %}
-    <div class="col-md-3 mb-4">
-      <div class="card">
-        <img src="{{ book.image_url }}" class="card-img-top" alt="{{ book.title }}" width="100">
-        <div class="card-body">
-          <h5 class="card-title">{{ book.title }}</h5>
-          <p class="card-text">Rp{{ book.price }}</p>
-          <a href="/book/{{ book.id }}" class="btn btn-primary">Detail</a>
-        </div>
-      </div>
-    </div>
-  {% endfor %}
-</div>
+<!-- Banner Promosi -->
+  <!-- Banner dari URL -->
+  <div class="mb-4">
+    <img src="https://www.shutterstock.com/image-vector/promo-sale-banner-bookstore-bookshop-260nw-1971130367.jpg" 
+         class="img-fluid rounded w-100" 
+         alt="Book Sale Banner">
+  </div>
+  <h2>Books <span>Collections</span></h2>
+  <div class="row" id="books-list">
+    <p>Loading books...</p>
+  </div>
+
+  <h2 class="mt-5">Rekomendasi untuk Anda</h2>
+  <div class="row" id="recommendations-list">
+    <p>Loading recommendations...</p>
+  </div>
+
+  <script>
+    async function loadBooks() {
+      try {
+        const response = await fetch('/api/books');
+        const books = await response.json();
+        const container = document.getElementById('books-list');
+        container.innerHTML = '';
+        if (books.length === 0) {
+          container.innerHTML = '<p>No books available.</p>';
+          return;
+        }
+        books.forEach(book => {
+          const col = document.createElement('div');
+          col.className = 'col-md-3 mb-4 d-flex';
+
+          col.innerHTML = `
+            <div class="card flex-fill d-flex flex-column">
+              <img src="${book.image_url}" class="card-img-top" alt="${book.title}">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">${book.title}</h5>
+                <p class="card-text">Rp${book.price}</p>
+                <a href="/book/${book.id}" class="btn btn-detail mt-auto">Detail</a>
+              </div>
+            </div>
+          `;
+          container.appendChild(col);
+        });
+      } catch (error) {
+        document.getElementById('books-list').innerHTML = '<p>Error loading books.</p>';
+        console.error(error);
+      }
+    }
+
+    loadBooks();
+
+    async function loadRecommendations() {
+    try {
+      const response = await fetch('/api/recommendations');
+      const recs = await response.json();
+      const container = document.getElementById('recommendations-list');
+      container.innerHTML = '';
+
+      if (recs.length === 0) {
+        container.innerHTML = '<p>Tidak ada rekomendasi.</p>';
+        return;
+      }
+
+      recs.forEach(book => {
+        const col = document.createElement('div');
+        col.className = 'col-md-3 mb-4 d-flex';
+
+        col.innerHTML = `
+          <div class="card flex-fill d-flex flex-column">
+            <img src="${book.image_url}" class="card-img-top" alt="${book.title}">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">${book.title}</h5>
+              <p class="card-text">Rp${book.price}</p>
+              <a href="/book/${book.id}" class="btn btn-detail mt-auto">Detail</a>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(col);
+      });
+    } catch (error) {
+      document.getElementById('recommendations-list').innerHTML = '<p> No recommendations.</p>';
+      console.error(error);
+    }
+  }
+
+  loadRecommendations();
+  </script>
 {% endblock %}

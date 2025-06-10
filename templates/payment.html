@@ -12,14 +12,13 @@
   <h4>Rincian Pembelian:</h4>
   <ul>
     {% for item in cart_items %}
-      <li>{{ item.title }} - Rp{{ item.price }}</li>
+      <li>{{ item.title }} - Rp{{ item.price }} x {{ item.quantity }}</li>
     {% endfor %}
   </ul>
   <p><strong>Total:</strong> Rp{{ total }}</p>
 
   <form method="POST">
-  <button type="submit" class="btn btn-success">Saya Sudah Transfer</button>
-</form>
-
+    <button type="submit" class="btn btn-success">Already Transferred</button>
+  </form>
 </div>
 {% endblock %}
